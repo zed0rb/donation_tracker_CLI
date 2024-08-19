@@ -94,9 +94,8 @@ do {
                 $view->displaySuccessMessage("Donation added successfully.");
                 break;
             case 6:
-                $id = (int)$view->prompt("Enter Charity ID: ");
-
-                $donations = $donationController->viewDonations($id);
+                $id = (int)$view->prompt("Enter Charity ID or leave blank to load all donations: ");
+                $donations = $donationController->loadDonationsByCharityId($id);
 
                 if (empty($donations)) {
                     $view->displayErrorMessage("No donations found for this charity.");
@@ -104,7 +103,7 @@ do {
                     foreach ($donations as $donation) {
                         $view->displayMessage(
                             "ID: {$donation->getId()}, Donor: {$donation->getDonorName()}, " .
-                            "Amount: {$donation->getAmount()}, Date: {$donation->getDateTime()}"
+                            "Amount: {$donation->getAmount()}, Charity Id: {$donation->getCharityId()} Date: {$donation->getDateTime()}"
                         );
                     }
                 }

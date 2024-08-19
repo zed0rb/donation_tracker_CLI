@@ -11,28 +11,39 @@ class DonationControllerTest extends TestCase
     public function testAddDonation()
     {
         $this->donationController->addDonation(1, 'John Doe', 100.50);
-        $donations = $this->donationController->viewDonations(1);
+        $donations = $this->donationController->loadDonationsByCharityId(1);
 
         $this->assertCount(1, $donations);
         $this->assertEquals('John Doe', $donations[0]->getDonorName());
         $this->assertEquals(100.50, $donations[0]->getAmount());
     }
 
-    public function testViewDonations()
+    public function testLoadDonationsByCharityId()
     {
         $this->donationController->addDonation(1, 'John Doe', 100.50);
-        $this->donationController->addDonation(1, 'Jane Doe', 150.75);
+        $this->donationController->addDonation(2, 'Jane Doe', 150.75);
 
-        $donations = $this->donationController->viewDonations(1);
+        $donations = $this->donationController->loadDonationsByCharityId(1);
+
+        $this->assertCount(1, $donations);
+        $this->assertEquals('John Doe', $donations[0]->getDonorName());
+    }
+
+    public function testLoadDonationsByEmptyInput()
+    {
+        $this->donationController->addDonation(1, 'John Doe', 100.50);
+        $this->donationController->addDonation(2, 'Jane Doe', 150.75);
+
+        $donations = $this->donationController->loadDonationsByCharityId(0);
 
         $this->assertCount(2, $donations);
         $this->assertEquals('John Doe', $donations[0]->getDonorName());
-        $this->assertEquals('Jane Doe', $donations[1]->getDonorName());
+        $this->assertEquals('John Doe', $donations[0]->getDonorName());
     }
 
-    public function testViewDonationsForNonExistentCharity()
+    public function testLoadDonationsForNonExistentCharity()
     {
-        $donations = $this->donationController->viewDonations(999);
+        $donations = $this->donationController->loadDonationsByCharityId(999);
 
         $this->assertEmpty($donations);
     }

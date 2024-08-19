@@ -40,23 +40,21 @@ readonly class DonationController
         $this->csvHandler->saveData($data, $header);
     }
 
-    public function viewDonations(int $id): ?array
-    {
-        return $this->loadDonationsByCharityId($id);
-    }
-
-    private function loadDonationsByCharityId(int $charityId): array
+    public function loadDonationsByCharityId(int $charityId): array
     {
         $donations = [];
         $data = $this->csvHandler->loadData();
 
         foreach ($data as $row) {
             list($id, $donorName, $amount, $storedCharityId, $dateTime) = $row;
-            if ((int)$storedCharityId === $charityId) {
+
+            // If charity ID is provided, filter by ID. Otherwise, include all donations.
+            if ($charityId === 0 || (int)$storedCharityId === $charityId) {
                 $donations[] = new Donation($id, $donorName, (float)$amount, (int)$storedCharityId, $dateTime);
             }
         }
 
         return $donations;
     }
+
 }
