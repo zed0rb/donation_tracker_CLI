@@ -9,3 +9,6 @@ composer.lock
 
 # Ignore all files in the data directory
 data/*.csv
+
+# Make sure the directory itself is not ignored
+!data/

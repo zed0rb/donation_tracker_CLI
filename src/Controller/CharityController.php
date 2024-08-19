@@ -74,12 +74,8 @@ class CharityController
         $this->saveAllCharities();
     }
 
-    public function viewCharities(): ?array
+    public function viewCharities(): array
     {
-        if (empty($this->charities)) {
-            return null;
-        }
-
         return $this->charities;
     }
 
