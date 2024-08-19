@@ -34,7 +34,7 @@ class DonationControllerTest extends TestCase
     {
         $donations = $this->donationController->viewDonations(999);
 
-        $this->assertNull($donations);
+        $this->assertEmpty($donations);
     }
 
     protected function setUp(): void

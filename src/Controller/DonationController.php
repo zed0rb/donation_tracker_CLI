@@ -42,14 +42,7 @@ readonly class DonationController
 
     public function viewDonations(int $id): ?array
     {
-
-        $donations = $this->loadDonationsByCharityId($id);
-
-        if (empty($donations)) {
-            return null;
-        } else {
-            return $donations;
-        }
+        return $this->loadDonationsByCharityId($id);
     }
 
     private function loadDonationsByCharityId(int $charityId): array
