@@ -28,6 +28,17 @@ class CharityControllerTest extends TestCase
         $this->assertCount(1, $charities);
     }
 
+    public function testAddCharityWithDuplicateNameDifferentCase(): void
+    {
+        $this->charityController->addCharity('Case Insensitive Name', 'email@example.com');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Charity with this name already exists.');
+
+        // Add a charity with the same name but different case
+        $this->charityController->addCharity('case insensitive name', 'another-email@example.com');
+    }
+
     protected function setUp(): void
     {
         // Create a temporary file for testing

@@ -32,10 +32,27 @@ class CharityController
 
     public function addCharity(string $name, string $email): void
     {
+        if ($this->isCharityNameExists($name)) {
+            throw new \InvalidArgumentException("Charity with this name already exists.");
+        }
+
         $charity = new Charity($this->charityIdCounter, $name, $email);
         $this->charities[$charity->getId()] = $charity;
         $this->saveAllCharities();
         $this->charityIdCounter++;
+    }
+
+    private function isCharityNameExists(string $name): bool
+    {
+        $normalizedName = strtolower($name);
+
+        foreach ($this->charities as $charity) {
+            if (strtolower($charity->getName()) === $normalizedName) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function saveAllCharities(): void
