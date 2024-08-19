@@ -6,3 +6,9 @@ vendor/
 
 # Ignore Composer lock file (optional, but recommended)
 composer.lock
+
+# But not the directory itself
+!data/
+
+# Ignore specific file types
+*.csv
