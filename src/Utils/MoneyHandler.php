@@ -5,25 +5,17 @@ namespace App\Utils;
 
 class MoneyHandler
 {
-    public function handleAmount(string $amountInput): ?float
+    public function handleAmountFormat(string $amountInput): ?float
     {
         // Replace comma with dot for decimal separation
+
         $normalizedAmount = str_replace(',', '.', $amountInput);
 
+        // Check if the input is numeric (valid integer or float)
         if (!is_numeric($normalizedAmount)) {
-            return null;
+            throw new \InvalidArgumentException("Invalid amount: must be a numeric value.");
         }
 
-        $amount = (float)$normalizedAmount;
-
-        if ($amount <= 0) {
-            return null;
-        }
-
-        // Check if the amount is an integer or a float with no more than two decimal places
-        if (ctype_digit($normalizedAmount) || preg_match('/^\d+(\.\d{1,2})?$/', $normalizedAmount)) {
-            return $amount;
-        }
-        return null;
+        return (float)$normalizedAmount;
     }
 }

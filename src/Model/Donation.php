@@ -8,7 +8,7 @@ class Donation
     public function __construct(
         private readonly string $id,
         private string          $donorName,
-        private float           $amount,
+        private ?float          $amount,
         private int             $charityId,
         private readonly string $dateTime
     )
@@ -26,10 +26,14 @@ class Donation
         $this->donorName = $donorName;
     }
 
-    public function setAmount(float $amount): void
+    public function setAmount(?float $amount): void
     {
         if ($amount <= 0) {
             throw new \InvalidArgumentException("Amount must be a positive number.");
+        }
+
+        if (round($amount, 2) != $amount) {
+            throw new \InvalidArgumentException("Invalid amount.");
         }
         $this->amount = $amount;
     }

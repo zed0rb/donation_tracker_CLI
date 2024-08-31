@@ -9,32 +9,36 @@ class MoneyHandlerTest extends TestCase
 
     public function testHandleAmountWithValidInput()
     {
-        $amount = $this->moneyHandler->handleAmount("50.00");
+        $amount = $this->moneyHandler->handleAmountFormat("50.00");
+        $this->assertEquals(50.00, $amount);
+    }
+
+    public function testHandleAmountWithCommaDecimal()
+    {
+        $amount = $this->moneyHandler->handleAmountFormat("50,00");
         $this->assertEquals(50.00, $amount);
     }
 
     public function testHandleAmountWithInvalidInput()
     {
-        $amount = $this->moneyHandler->handleAmount("invalid");
-        $this->assertNull($amount);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid amount: must be a numeric value.");
+
+        $this->moneyHandler->handleAmountFormat("invalid");
     }
 
-    public function testHandleAmountWithMoreThanTwoDecimals()
+    public function testHandleAmountWithEmptyInput()
     {
-        $amount = $this->moneyHandler->handleAmount("50.555");
-        $this->assertNull($amount);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid amount: must be a numeric value.");
+
+        $this->moneyHandler->handleAmountFormat("");
     }
 
-    public function testHandleAmountWithNegativeInput()
+    public function testHandleAmountWithNegativeValue()
     {
-        $amount = $this->moneyHandler->handleAmount("-10.00");
-        $this->assertNull($amount);
-    }
-
-    public function testHandleAmountWithCommaDecimal()
-    {
-        $amount = $this->moneyHandler->handleAmount("50,00");
-        $this->assertEquals(50.00, $amount);
+        $amount = $this->moneyHandler->handleAmount("-50.00");
+        $this->assertEquals(-50.00, $amount);
     }
 
     protected function setUp(): void

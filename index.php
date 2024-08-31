@@ -8,12 +8,12 @@ use App\Utils\MoneyHandler;
 use App\View\View;
 
 $view = new View();
+$moneyHandler = new MoneyHandler();
 const CHARITY_FILE_PATH = __DIR__ . '/data/charities.csv';
 const DONATION_FILE_PATH = __DIR__ . '/data/donations.csv';
 
 $charityController = new CharityController(CHARITY_FILE_PATH);
 $donationController = new DonationController(DONATION_FILE_PATH);
-$moneyHandler = new MoneyHandler();
 
 do {
     echo "Donation Tracker CLI\n";
@@ -75,14 +75,8 @@ do {
 
                 $name = $view->prompt("Enter Donor Name: ");
                 $amountInput = $view->prompt("Enter Amount ($): ");
+                $amount = $moneyHandler->handleAmountFormat($amountInput);
 
-                // Use the MoneyHandler to validate and normalize the amount
-                $amount = $moneyHandler->handleAmount($amountInput);
-
-                if ($amount === null) {
-                    $view->displayErrorMessage("Invalid amount.");
-                    break;
-                }
 
                 $donationController->addDonation($id, $name, $amount);
                 $view->displaySuccessMessage("Donation added successfully.");
@@ -103,6 +97,6 @@ do {
                 $view->displayErrorMessage("Invalid option. Please try again.");
         }
     } catch (Exception $e) {
-        $view->displayErrorMessage("An error occurred: " . $e->getMessage());
+        $view->displayErrorMessage($e->getMessage());
     }
 } while ($option != 7);
