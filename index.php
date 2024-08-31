@@ -30,16 +30,10 @@ do {
     try {
         switch ($option) {
             case 1:
-                $charities = $charityController->viewCharities();
-                if (empty($charities)) {
-                    $view->displayErrorMessage("No charities found.");
-                } else {
-                    foreach ($charities as $charity) {
-                        $view->displayMessage(
-                            "ID: {$charity->getId()}, Name: {$charity->getName()}, Email: {$charity->getEmail()}"
-                        );
-                    }
-                }
+                $charities = $charityController->getCharities();
+                $view->displayItems($charities, function ($charity) {
+                    return "ID: {$charity->getId()}, Name: {$charity->getName()}, Email: {$charity->getEmail()}";
+                });
                 break;
             case 2:
                 $name = $view->prompt("Enter Charity Name: ");
@@ -97,16 +91,10 @@ do {
                 $id = (int)$view->prompt("Enter Charity ID or leave blank to load all donations: ");
                 $donations = $donationController->loadDonationsByCharityId($id);
 
-                if (empty($donations)) {
-                    $view->displayErrorMessage("No donations found for this charity.");
-                } else {
-                    foreach ($donations as $donation) {
-                        $view->displayMessage(
-                            "ID: {$donation->getId()}, Donor: {$donation->getDonorName()}, " .
-                            "Amount: {$donation->getAmount()}, Charity Id: {$donation->getCharityId()} Date: {$donation->getDateTime()}"
-                        );
-                    }
-                }
+                $view->displayItems($donations, function ($donation) {
+                    return "ID: {$donation->getId()}, Donor: {$donation->getDonorName()}, " .
+                        "Amount: {$donation->getAmount()}, Charity Id: {$donation->getCharityId()} Date: {$donation->getDateTime()}";
+                });
                 break;
             case 7:
                 $view->displaySuccessMessage("Exiting... Goodbye!");

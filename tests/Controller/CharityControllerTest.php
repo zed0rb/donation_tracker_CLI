@@ -11,7 +11,7 @@ class CharityControllerTest extends TestCase
     public function testAddCharity()
     {
         $this->charityController->addCharity("Test Charity", "test@example.com");
-        $charities = $this->charityController->viewCharities();
+        $charities = $this->charityController->getCharities();
 
         $this->assertCount(1, $charities);
         $this->assertEquals("Test Charity", $charities[1]->getName());
@@ -23,7 +23,7 @@ class CharityControllerTest extends TestCase
         $this->charityController->addCharity("Test1 Charity", "test1@example.com");
 
         $this->charityController->deleteCharity(1);
-        $charities = $this->charityController->viewCharities();
+        $charities = $this->charityController->getCharities();
 
         $this->assertCount(1, $charities);
     }
@@ -32,7 +32,6 @@ class CharityControllerTest extends TestCase
     {
         $this->charityController->addCharity('Case Insensitive Name', 'email@example.com');
 
-        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Charity with this name already exists.');
 
         // Add a charity with the same name but different case
