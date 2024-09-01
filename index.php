@@ -23,7 +23,8 @@ do {
     echo "4. Delete Charity\n";
     echo "5. Add Donation\n";
     echo "6. View Donations\n";
-    echo "7. Exit\n";
+    echo "7. Import Charities from CSV\n";
+    echo "8. Exit\n";
 
     $option = $view->prompt("Choose an option: ");
 
@@ -91,6 +92,11 @@ do {
                 });
                 break;
             case 7:
+                $filePath = $view->prompt("Enter path to CSV file for importing charities: ");
+                $charityController->importCharitiesFromCsv($filePath);
+                $view->displaySuccessMessage("Charities imported successfully.");
+                break;
+            case 8:
                 $view->displaySuccessMessage("Exiting... Goodbye!");
                 break;
             default:
@@ -99,4 +105,4 @@ do {
     } catch (Exception $e) {
         $view->displayErrorMessage($e->getMessage());
     }
-} while ($option != 7);
+} while ($option != 8);

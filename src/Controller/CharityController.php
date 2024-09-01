@@ -31,6 +31,16 @@ class CharityController
         }
     }
 
+    public function getCharities(): array
+    {
+        return $this->charities;
+    }
+
+    public function getCharityById(int $id): ?Charity
+    {
+        return $this->charities[$id] ?? null;
+    }
+
     public function addCharity(string $name, string $email): void
     {
         if ($this->isCharityNameExists($name)) {
@@ -74,7 +84,6 @@ class CharityController
 
     public function editCharity(Charity $charity, string $name, string $email): void
     {
-
         if (!empty($name)) {
             $charity->setName($name);
         }
@@ -92,13 +101,43 @@ class CharityController
         $this->saveAllCharities();
     }
 
-    public function getCharities(): array
+    public function importCharitiesFromCsv(string $filePath): void
     {
-        return $this->charities;
+        if (!file_exists($filePath)) {
+            throw new \InvalidArgumentException("The file does not exist: $filePath");
+        }
+
+        $importHandler = new CsvFileHandler($filePath);
+        $importData = $importHandler->loadData();
+
+        if (empty($importData)) {
+            throw new \InvalidArgumentException("The file is empty or contains invalid data: $filePath");
+        }
+
+        foreach ($importData as $row) {
+            if (count($row) !== 3) {
+                throw new \InvalidArgumentException("Invalid data format in file: Each row must have exactly 3 columns.");
+            }
+
+            $header = array_shift($importData);
+            if ($header !== ['ID', 'Name', 'Representative Email']) {
+                throw new \InvalidArgumentException("Invalid CSV header format.");
+            }
+
+            list($id, $name, $email) = $row;
+
+            if ($this->isCharityNameExists($name)) {
+                continue;
+            }
+
+            $newId = $this->charityIdCounter;
+            $this->charityIdCounter++;
+
+            $charity = new Charity($newId, $name, $email);
+            $this->charities[$newId] = $charity;
+        }
+
+        $this->saveAllCharities();
     }
 
-    public function getCharityById(int $id): ?Charity
-    {
-        return $this->charities[$id] ?? null;
-    }
 }

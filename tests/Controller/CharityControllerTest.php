@@ -47,7 +47,7 @@ class CharityControllerTest extends TestCase
 
     protected function tearDown(): void
     {
-        // Remove the temporary file
+        // Remove the temporary files
         unlink($this->tempFile);
     }
 }

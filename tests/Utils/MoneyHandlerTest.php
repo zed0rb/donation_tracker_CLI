@@ -37,7 +37,7 @@ class MoneyHandlerTest extends TestCase
 
     public function testHandleAmountWithNegativeValue()
     {
-        $amount = $this->moneyHandler->handleAmount("-50.00");
+        $amount = $this->moneyHandler->handleAmountFormat("-50.00");
         $this->assertEquals(-50.00, $amount);
     }
 
